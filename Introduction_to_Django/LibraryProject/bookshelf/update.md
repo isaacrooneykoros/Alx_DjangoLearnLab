@@ -3,11 +3,15 @@
 ```python
 from bookshelf.models import Book
 
-# Update the title of the book
-b = Book.objects.get(id=book.id)
-b.title = "Nineteen Eighty-Four"
-b.save()
-Book.objects.get(id=b.id).title
+# Retrieve the book
+book = Book.objects.get(id=1)
 
-#Output
+# Update the title of the book
+book.title = "Nineteen Eighty-Four"
+book.save()
+
+# Verify update
+Book.objects.get(id=book.id).title
+
+# Output
 'Nineteen Eighty-Four'
