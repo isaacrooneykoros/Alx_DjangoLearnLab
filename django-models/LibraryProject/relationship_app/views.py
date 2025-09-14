@@ -7,8 +7,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test,
-    permission_required,
 )
+from django.contrib.auth.decorators import permission_required
 from django import forms
 from .models import Book
 from .models import Library
