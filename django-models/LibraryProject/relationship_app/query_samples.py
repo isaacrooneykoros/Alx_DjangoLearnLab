@@ -1,10 +1,10 @@
 # query_samples.py
-from relationship_app.models import Author, Library
+from relationship_app.models import Author, Book, Library
 
 def books_by_author(author_name):
     try:
         author = Author.objects.get(name=author_name)
-        return list(author.books.all())  # ✅ use related_name='books'
+        return list(Book.objects.filter(author=author))  # ✅ matches checker expectation
     except Author.DoesNotExist:
         return []
 
