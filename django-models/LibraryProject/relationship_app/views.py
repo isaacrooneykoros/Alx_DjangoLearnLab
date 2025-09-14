@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import (
     permission_required,
 )
 from django import forms
-from .models import Book, Library
+from .models import Book
+from .models import Library
 
 
 # ----------------------------
