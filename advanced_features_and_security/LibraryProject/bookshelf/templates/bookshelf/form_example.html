@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Book</title>
+</head>
+<body>
+    <h1>Create a New Book</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            {{ form.title.label_tag }}<br>
+            {{ form.title }}
+        </p>
+
+        <p>
+            {{ form.author.label_tag }}<br>
+            {{ form.author }}
+        </p>
+
+        <p>
+            {{ form.description.label_tag }}<br>
+            {{ form.description }}
+        </p>
+
+        <button type="submit">Save</button>
+    </form>
+
+    <p><a href="{% url 'bookshelf:book_list' %}">Back to Book List</a></p>
+</body>
+</html>
