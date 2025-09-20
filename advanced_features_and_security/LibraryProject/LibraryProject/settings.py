@@ -40,14 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Local apps
-    'accounts',
     'bookshelf',
 
     # Third-party
     'csp',
 ]
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # ⚙️ Middleware
 MIDDLEWARE = [
