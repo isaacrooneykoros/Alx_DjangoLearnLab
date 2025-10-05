@@ -1,0 +1,10 @@
+{% extends 'blog/base.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+  <h2>Edit profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ pform.as_p }}
+    <button type="submit">Save</button>
+  </form>
+{% endblock %}

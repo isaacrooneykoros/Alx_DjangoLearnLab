@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'django_cleanup.apps.CleanupConfig',  # Automatically deletes old files.
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_blog.wsgi.application'
+
+# Authentication redirects
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"      # where to go after login
+LOGOUT_REDIRECT_URL = "/"     # where to go after logout
+
 
 
 # Database
