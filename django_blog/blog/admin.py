@@ -5,4 +5,3 @@ from .models import Profile, Post
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'bio')
 admin.site.register(Post)
-admin.site.register(Profile)
