@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post , Comment
 
 class AuthTests(TestCase):
     def test_register(self):
@@ -59,4 +59,47 @@ class PostCRUDAuthTests(TestCase):
         resp = self.client.post(reverse('post-delete', args=[self.post.pk]))
         self.assertEqual(resp.status_code, 302)
         self.assertFalse(Post.objects.filter(pk=self.post.pk).exists())
+        
+class CommentTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user('author', 'a@a.com', 'p@ssword')
+        self.other = User.objects.create_user('other', 'o@o.com', 'p@ssword')
+        self.post = Post.objects.create(title='Test Post', content='Body', author=self.author)
+
+    def test_create_comment_requires_login(self):
+        url = reverse('comment-create', args=[self.post.pk])
+        resp = self.client.post(url, {'content': 'Nice post!'})
+        # not logged in -> redirect to login
+        self.assertEqual(resp.status_code, 302)
+        # login then create
+        self.client.login(username='other', password='p@ssword')
+        resp = self.client.post(url, {'content': 'Nice post!'})
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(Comment.objects.filter(post=self.post, author=self.other).exists())
+
+    def test_update_comment_only_author(self):
+        comment = Comment.objects.create(post=self.post, author=self.other, content='Hello')
+        edit_url = reverse('comment-update', args=[comment.pk])
+        # another user (not comment author)
+        self.client.login(username='author', password='p@ssword')
+        resp = self.client.get(edit_url)
+        # should be 403 (UserPassesTestMixin)
+        self.assertEqual(resp.status_code, 403)
+        # correct user can access
+        self.client.login(username='other', password='p@ssword')
+        resp = self.client.get(edit_url)
+        self.assertEqual(resp.status_code, 200)
+
+    def test_delete_comment_only_author(self):
+        comment = Comment.objects.create(post=self.post, author=self.other, content='To delete')
+        delete_url = reverse('comment-delete', args=[comment.pk])
+        # attempt delete as not-author -> 403
+        self.client.login(username='author', password='p@ssword')
+        resp = self.client.post(delete_url)
+        self.assertEqual(resp.status_code, 403)
+        # author deletes
+        self.client.login(username='other', password='p@ssword')
+        resp = self.client.post(delete_url)
+        self.assertEqual(resp.status_code, 302)
+        self.assertFalse(Comment.objects.filter(pk=comment.pk).exists())
 
