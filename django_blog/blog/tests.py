@@ -102,4 +102,22 @@ class CommentTests(TestCase):
         resp = self.client.post(delete_url)
         self.assertEqual(resp.status_code, 302)
         self.assertFalse(Comment.objects.filter(pk=comment.pk).exists())
+        
+class TagSearchTests(TestCase):
+    def setUp(self):
+        u = User.objects.create_user('a','a@a.com','pass')
+        p1 = Post.objects.create(title='Python tips', content='Some content', author=u)
+        p1.tags.add('python', 'tips')
+        p2 = Post.objects.create(title='Django guide', content='Django content', author=u)
+        p2.tags.add('django')
+
+    def test_tag_view(self):
+        resp = self.client.get(reverse('posts-by-tag', args=['python']))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Python tips')
+
+    def test_search_by_keyword(self):
+        resp = self.client.get(reverse('search'), {'q': 'Django'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Django guide')
 

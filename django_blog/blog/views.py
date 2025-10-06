@@ -11,6 +11,7 @@ from .models import Post
 from .forms import PostForm, CommentForm
 from django.shortcuts import get_object_or_404
 from .models import Comment
+from django.db.models import Q  # for search
 
 
 def register_view(request):
@@ -151,3 +152,25 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return comment.author == self.request.user
+    
+class TaggedPostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list_by_tag.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name__iexact=tag_name).distinct().order_by('-published_date')
+
+def search_view(request):
+    q = request.GET.get('q', '').strip()
+    posts = Post.objects.all()
+    if q:
+        # search in title, content, and tags (taggit)
+        posts = posts.filter(
+            Q(title__icontains=q) |
+            Q(content__icontains=q) |
+            Q(tags__name__icontains=q)
+        ).distinct().order_by('-published_date')
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': q})

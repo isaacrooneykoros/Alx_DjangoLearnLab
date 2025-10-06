@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'django_cleanup.apps.CleanupConfig',  # Automatically deletes old files.
+    'taggit',
 ]
 
 MIDDLEWARE = [
