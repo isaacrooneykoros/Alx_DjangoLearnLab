@@ -1,8 +1,7 @@
 from django.urls import path, include
 urlpatterns = [
-    path('api/accounts/', include('accounts.urls')),
-    path('api/admin/', include('django.contrib.admin.urls')),
-    path('api/notifications/', include('notifications.urls')),
-    path('api/posts/', include('posts.urls')),
+    path('social/accounts/', include('accounts.urls')),
+    path('social/notifications/', include('notifications.urls')),
+    path('social/posts/', include('posts.urls')),
     
 ]

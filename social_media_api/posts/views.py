@@ -1,7 +1,8 @@
 from rest_framework import viewsets, status, permissions, generics  # ✅ added generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Post, Comment, Like, Notification  # ✅ added Notification
+from .models import Post, Comment, Like
+from notifications.models import Notification
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.generics import ListAPIView
