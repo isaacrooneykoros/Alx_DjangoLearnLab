@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
-from .models import User 
+from .models import CustomUser  # <-- use CustomUser instead of User
 from django.shortcuts import get_object_or_404
 
 
-class RegisterView(generics.GenericAPIView):  # changed from CreateAPIView
-    queryset = User.objects.all() # Ensure queryset is defined
+class RegisterView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()  # <-- required line
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -42,7 +42,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 @api_view(['POST'])
 def follow_view(request, user_id):
-    target = get_object_or_404(User, pk=user_id)
+    target = get_object_or_404(CustomUser, pk=user_id)
     user = request.user
     if user == target:
         return Response({'detail': 'Cannot follow yourself'}, status=400)
@@ -52,7 +52,7 @@ def follow_view(request, user_id):
 
 @api_view(['POST'])
 def unfollow_view(request, user_id):
-    target = get_object_or_404(User, pk=user_id)
+    target = get_object_or_404(CustomUser, pk=user_id)
     user = request.user
     user.following.remove(target)
     return Response({'detail': 'unfollowed'}, status=200)
