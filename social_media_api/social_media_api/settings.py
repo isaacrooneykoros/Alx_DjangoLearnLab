@@ -157,6 +157,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# Deployment port configuration
+PORT = os.environ.get("PORT", "8000")
+
+
 # ------------------------------------------------------------
 # LOGGING (for monitoring in production)
 # ------------------------------------------------------------
