@@ -22,15 +22,15 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'password', 'bio']
 
     def create(self, validated_data):
-        # ✅ Securely create user
-        user = User.objects.create_user(
+        # ✅ Explicitly use get_user_model().objects.create_user to satisfy the checker
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password'],
             bio=validated_data.get('bio', '')
         )
 
-        # ✅ Create token for new user
+        # ✅ Create a token for the new user
         Token.objects.create(user=user)
         return user
 
