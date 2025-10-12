@@ -1,15 +1,18 @@
 from django.urls import path, include
-from .views import PostViewSet, CommentViewSet
 from rest_framework.routers import DefaultRouter
-from .views import FeedView
+from .views import PostViewSet, CommentViewSet, FeedView
 
 router = DefaultRouter()
-router.register('posts', PostViewSet, basename='post')
-router.register('comments', CommentViewSet, basename='comment')
+router.register(r'posts', PostViewSet, basename='post')
+router.register(r'comments', CommentViewSet, basename='comment')
 
 urlpatterns = [
     path('', include(router.urls)),
-    # feed endpoint:
-    path('feed/', PostViewSet.as_view({'get':'list'}), name='feed'),  # we'll filter feed by query param in view or create a separate view below
-    path('feed/', FeedView.as_view(), name='feed'),
+
+    # ✅ Explicit like/unlike endpoints as required
+    path('posts/<int:pk>/like/', PostViewSet.as_view({'post': 'like'}), name='post-like'),
+    path('posts/<int:pk>/unlike/', PostViewSet.as_view({'post': 'unlike'}), name='post-unlike'),
+
+    # Optional: feed endpoint
+    path('feed/', FeedView.as_view(), name='user-feed'),
 ]
